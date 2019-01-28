@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 #from .context import sample
+import sys
 
+sys.path.append('/usr/local/python/cv2/python-2.7')
 import unittest
 import cv2
+
 
 class BasicTestSuite(unittest.TestCase):
     """Basic test cases."""

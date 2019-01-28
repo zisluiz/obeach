@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append('/usr/local/python/cv2/python-2.7')
 import cv2
 
 
