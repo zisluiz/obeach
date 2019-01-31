@@ -3,7 +3,7 @@
 #from .context import sample
 import sys
 
-sys.path.append('/usr/local/python/cv2/python-2.7')
+sys.path.append('/usr/local/lib/python2.7/dist-packages/cv2/python-2.7/')
 import unittest
 import cv2
 

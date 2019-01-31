@@ -1,7 +1,7 @@
 """foo.py - a simple demo of importing a calss from C++"""
 import ctypes
 
-lib = ctypes.cdll.LoadLibrary('/media/zis/Dados/dev/Mestrado/codes/obeach/lib/graph-canny-segm.so')
+lib = ctypes.cdll.LoadLibrary('/home/zis/dev/code/obeach/lib/graph-canny-segm.so')
 
 class GraphCannySegm(object):
     """The Foo class supports two methods, bar, and foobar..."""
