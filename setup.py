@@ -12,13 +12,13 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='sample',
+    name='obeach',
     version='0.1.0',
-    description='Sample package for Python-Guide.org',
+    description='A framework for RGBD Objec Segmentation',
     long_description=readme,
-    author='Kenneth Reitz',
-    author_email='me@kennethreitz.com',
-    url='https://github.com/kennethreitz/samplemod',
+    author='Luiz Eduardo Zis',
+    author_email='zisluiz@gmail.com',
+    url='https://github.com/zisluiz',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )
