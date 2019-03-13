@@ -1,34 +1,43 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-
-from core.segmentation import Segmentation
+from core.parameter import *
+from core.fakedevice import *
+from util.log import Logger
+from core.rgbd_segmentation import RGBDSegmentation
 from core.parameter import Parameter
 from core.frame import *
-from util.log import Logger
-from lib.graph_canny_segm import GraphCannySegm
-import os
+
 
 class BasicTestSuite(unittest.TestCase):
 
-    def test_absolute_truth_and_meaning(self):
-        #dataset_path = '/home/zis/dev/datasets/putkk/Dataset_1_Kin_2'
-        dataset_path = '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2'
-        Logger.info('Dataset path: '+dataset_path)
-
-        parameter = Parameter()
-        parameter.tecnique = GraphCannySegm()
-        parameter.outputDir = os.getcwd()+'/results/'
-        seg = Segmentation(parameter)
-        directoryRGB =  dataset_path + '/rgb/'
-        directoryDepth = dataset_path + '/depth/'
+    def test_print_result(self):
+        device = FakeDevice(SourceType.IMAGE, '/home/zis/dev/datasets/putkk/Dataset_1_Kin_2/')
+        # device = FakeDevice(SourceType.IMAGE, '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2')
+        parameter = Parameter(Segmentation.GRAPH_CANNY, os.getcwd()+'/results/')
+        seg = RGBDSegmentation(parameter)
+        directory_rgb = device.datasetPath + 'rgb/'
+        directory_depth = device.datasetPath + 'depth/'
 
         for i in range(0, 10):
-            frame = RGBDFrame(RGBFrame(directoryRGB, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directoryDepth, 'depth_' + format(i, '05') + '.png'))
+            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
             seg.process(frame)
-            #seg.printResults()
-            #seg.showResults()
-            seg.writeResults()
+            seg.print_results()
+            seg.finish()
+            break
+
+    def test_write_result(self):
+        device = FakeDevice(SourceType.IMAGE, '/home/zis/dev/datasets/putkk/Dataset_1_Kin_2/')
+        # device = FakeDevice(SourceType.IMAGE, '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2')
+        parameter = Parameter(Segmentation.GRAPH_CANNY, os.getcwd()+'/results/')
+        seg = RGBDSegmentation(parameter)
+        directory_rgb = device.datasetPath + 'rgb/'
+        directory_depth = device.datasetPath + 'depth/'
+
+        for i in range(0, 10):
+            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
+            seg.process(frame)
+            seg.write_results()
             seg.finish()
             break
 

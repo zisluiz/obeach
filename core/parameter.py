@@ -1,6 +1,18 @@
+from enum import Enum
+import os
+
+
+class Segmentation(Enum):
+    GRAPH_CANNY = 1
+    CPF = 2
+
+
 class Parameter(object):
 
-    def __init__(self, fps=30, ops=20, tecnique='ONE'):
-        self.fps = fps
+    def __init__(self, segmentation, output_dir, ops=20):
+        self.segmentation = segmentation
+        self.outputDir = output_dir
         self.ops = ops
-        self.tecnique = tecnique
+
+        if not os.path.exists(self.outputDir):
+            os.makedirs(self.outputDir)
