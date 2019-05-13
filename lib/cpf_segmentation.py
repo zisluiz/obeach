@@ -1,7 +1,7 @@
 """foo.py - a simple demo of importing a calss from C++"""
 import ctypes
 
-lib = ctypes.cdll.LoadLibrary('/home/zis/dev/code/obeach/lib/libcpf_segmentation.so')
+lib = ctypes.cdll.LoadLibrary('/opt/project/lib/libcpf_segmentation.so')
 # lib = ctypes.cdll.LoadLibrary('/media/zis/Dados/dev/Mestrado/codes/obeach/lib/libcpf_segmentation.so')
 
 

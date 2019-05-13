@@ -12,7 +12,7 @@ from core.frame import *
 class BasicTestSuite(unittest.TestCase):
 
     def test_print_result(self):
-        device = FakeDevice(SourceType.IMAGE, '/home/zis/dev/datasets/putkk/Dataset_1_Kin_2/')
+        device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
         # device = FakeDevice(SourceType.IMAGE, '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2')
         parameter = Parameter(Segmentation.GRAPH_CANNY, os.getcwd()+'/results/')
         seg = RGBDSegmentation(parameter)
@@ -27,7 +27,7 @@ class BasicTestSuite(unittest.TestCase):
             break
 
     def test_write_result(self):
-        device = FakeDevice(SourceType.IMAGE, '/home/zis/dev/datasets/putkk/Dataset_1_Kin_2/')
+        device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
         # device = FakeDevice(SourceType.IMAGE, '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2')
         parameter = Parameter(Segmentation.GRAPH_CANNY, os.getcwd()+'/results/')
         seg = RGBDSegmentation(parameter)

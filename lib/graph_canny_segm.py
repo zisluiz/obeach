@@ -3,7 +3,7 @@ import ctypes
 from core.object import Object
 
 # lib = ctypes.cdll.LoadLibrary('/media/zis/Dados/dev/Mestrado/codes/obeach/lib/libgraph-canny-segm.so')
-lib = ctypes.cdll.LoadLibrary('/home/zis/dev/code/obeach/lib/libgraph-canny-segm.so')
+lib = ctypes.cdll.LoadLibrary('/opt/project/lib/libgraph-canny-segm.so')
 
 
 class GraphCannySegm(object):
