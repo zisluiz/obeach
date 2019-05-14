@@ -65,6 +65,13 @@ RUN pip3 install https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_
 RUN pip3 install --user  tensorflow-gpu
 RUN pip3 install scipy
 
+#Pytorch
+RUN pip3 install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl
+RUN pip3 install torchvision
+RUN pip3 install dominate visdom
+RUN mkdir -p /root/.cache/torch/checkpoints/
+RUN wget -O /root/.cache/torch/checkpoints/vgg16-397923af.pth https://download.pytorch.org/models/vgg16-397923af.pth
+
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES \
     ${NVIDIA_VISIBLE_DEVICES:-all}
@@ -77,4 +84,4 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 WORKDIR /usr/app/
 
 #docker build -t obeach:latest -f obeachDockerfile .
-#docker run -it --privileged --runtime=nvidia --net=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/projects/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/projects/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/projects/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/projects/FCN.tensorflow/:/usr/app/FCN.tensorflow/ obeach bash
+#docker run -it --privileged --runtime=nvidia --net=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/projects/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/projects/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/projects/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/projects/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/projects/fusenet-pytorch/:/usr/app/fusenet-pytorch/ obeach bash
