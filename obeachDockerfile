@@ -81,8 +81,10 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 COPY caffe/ /usr/libs/caffe/
 RUN cd /usr/libs/caffe && mkdir build && cd build && cmake .. && make
 
+RUN pip3 install scikit-image imutils
+
 WORKDIR /usr/app/
 
 #docker build -t obeach:latest -f obeachDockerfile .
-#docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/projects/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/projects/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/projects/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/projects/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/projects/fusenet-pytorch/:/usr/app/fusenet-pytorch/ obeach bash
-#docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/code/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/code/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/code/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/code/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/code/fusenet-pytorch/:/usr/app/fusenet-pytorch/ obeach bash
+#docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/projects/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/projects/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/projects/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/projects/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/projects/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/projects/rgbd-saliency/:/usr/app/rgbd-saliency/ obeach bash
+#docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/code/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/code/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/code/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/code/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/code/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/code/rgbd-saliency/:/usr/app/rgbd-saliency/ obeach bash
