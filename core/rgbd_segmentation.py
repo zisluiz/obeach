@@ -5,6 +5,7 @@ import random
 import os
 from core.parameter import Segmentation
 from lib.graph_canny_segm import GraphCannySegm
+from lib.rgbd_saliency import RgbdSaliency
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
 from ctypes import create_string_buffer
@@ -21,8 +22,10 @@ class RGBDSegmentation(object):
         self.lastProcessedFrame = None
         self.results = None
         self.r = lambda: random.randint(0, 255)
-        if self.parameter.segmentation.__eq__(Segmentation.GRAPH_CANNY):
+        if self.parameter.segmentation == Segmentation.GRAPH_CANNY:
             self.algorithmSegmentation = GraphCannySegm()
+        elif self.parameter.segmentation == Segmentation.RGBD_SALIENCY:
+            self.algorithmSegmentation = RgbdSaliency()
         else:
             raise ValueError('Segmentation options not supported: '+self.parameter.segmentation.name+'.')
 
@@ -31,7 +34,7 @@ class RGBDSegmentation(object):
         self.lastProcessedFrame = frame
         Logger.info('Processing frame - RGB: ' + frame.rgbFrame.getFilePath() + ', Depth: '+frame.depthFrame.getFilePath())
         self.results = self.algorithmSegmentation.segment_image(frame.rgbFrame.getFilePath(),
-                        frame.depthFrame.getFilePath(), False, False, self.numObjects)
+                        frame.depthFrame.getFilePath(), self.numObjects)
         Logger.info('Objects segmented: ' + str(self.get_num_objects()))
         time_elapsed.printTimeElapsed()
 

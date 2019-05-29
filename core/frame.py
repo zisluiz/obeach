@@ -1,3 +1,5 @@
+import cv2
+
 class RGBFrame(object):
 
     def __init__(self, directory, fileName):
@@ -7,6 +9,9 @@ class RGBFrame(object):
     def getFilePath(self):
         return self.directory + self.fileName
 
+    def getImage(self):
+        return cv2.imread(self.getFilePath(), cv2.IMREAD_COLOR)
+
 
 class DepthFrame(object):
 
@@ -14,8 +19,8 @@ class DepthFrame(object):
         self.directory = directory
         self.fileName = fileName
 
-    def getFilePath(self):
-        return self.directory + self.fileName
+    def getImage(self):
+        return cv2.imread(self.getFilePath(), cv2.IMREAD_GRAYSCALE)
 
 
 class RGBDFrame(object):

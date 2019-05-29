@@ -9,7 +9,7 @@ from core.parameter import Parameter
 from core.frame import *
 
 
-class BasicTestSuite(unittest.TestCase):
+class GraphCannySegTestSuite(unittest.TestCase):
 
     def test_print_result(self):
         device = FakeDevice(SourceType.IMAGE, 'dataset/png/')

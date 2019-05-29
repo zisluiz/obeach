@@ -5,6 +5,8 @@ import os
 class Segmentation(Enum):
     GRAPH_CANNY = 1
     CPF = 2
+    FOUR_D_SEG = 3
+    RGBD_SALIENCY = 4
 
 
 class Parameter(object):

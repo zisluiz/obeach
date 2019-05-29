@@ -9,7 +9,7 @@ from util.log import Logger
 import os
 
 
-class BasicTestSuite(unittest.TestCase):
+class CpfSegmentationTestSuite(unittest.TestCase):
 
     def test_show_result(self):
         device = FakeDevice(SourceType.PCL, '/media/zis/Dados/dev/code/cpf_segmentation/test_data/')
