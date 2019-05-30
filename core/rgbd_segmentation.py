@@ -8,7 +8,7 @@ from lib.graph_canny_segm import GraphCannySegm
 from lib.rgbd_saliency import RgbdSaliency
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
-from ctypes import create_string_buffer
+import ctypes
 # import sys
 # sys.path.append('/usr/local/lib/python2.7/dist-packages/cv2/python-2.7/')
 # sys.path.append('/usr/local/python/cv2/python-2.7')
@@ -17,7 +17,7 @@ from ctypes import create_string_buffer
 class RGBDSegmentation(object):
     def __init__(self, parameter):
         self.parameter = parameter
-        self.numObjects = create_string_buffer(3)
+        self.numObjects = ctypes.create_string_buffer(20)
         self.algorithmSegmentation = None
         self.lastProcessedFrame = None
         self.results = None
