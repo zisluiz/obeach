@@ -18,7 +18,7 @@ import ctypes
 class RGBDSegmentation(object):
     def __init__(self, parameter):
         self.parameter = parameter
-        self.numObjects = ctypes.create_string_buffer(20)
+        self.numObjects = ctypes.create_string_buffer(3)
         self.algorithmSegmentation = None
         self.lastProcessedFrame = None
         self.results = None

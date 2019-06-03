@@ -24,7 +24,7 @@ class RgbdSaliencyTestSuite(unittest.TestCase):
             seg.print_results()
             seg.finish()
             break
-"""
+
     def test_write_result(self):
         device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
         # device = FakeDevice(SourceType.IMAGE, '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2')
@@ -39,7 +39,7 @@ class RgbdSaliencyTestSuite(unittest.TestCase):
             seg.write_results()
             seg.finish()
             break
-"""
+
 
 if __name__ == '__main__':
     Logger.init()
