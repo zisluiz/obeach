@@ -6,6 +6,7 @@ import os
 from core.parameter import Segmentation
 from lib.graph_canny_segm import GraphCannySegm
 from lib.rgbd_saliency import RgbdSaliency
+from lib.fcn_tensorflow import FcnTensorflow
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
 import ctypes
@@ -26,6 +27,8 @@ class RGBDSegmentation(object):
             self.algorithmSegmentation = GraphCannySegm()
         elif self.parameter.segmentation == Segmentation.RGBD_SALIENCY:
             self.algorithmSegmentation = RgbdSaliency()
+        elif self.parameter.segmentation == Segmentation.FCN_TENSORFLOW:
+            self.algorithmSegmentation = FcnTensorflow()
         else:
             raise ValueError('Segmentation options not supported: '+self.parameter.segmentation.name+'.')
 

@@ -7,6 +7,7 @@ class Segmentation(Enum):
     CPF = 2
     FOUR_D_SEG = 3
     RGBD_SALIENCY = 4
+    FCN_TENSORFLOW = 5
 
 
 class Parameter(object):
