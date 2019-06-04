@@ -11,6 +11,7 @@ from core.frame import *
 
 class RgbdSaliencyTestSuite(unittest.TestCase):
 
+    """
     def test_print_result(self):
         device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
         parameter = Parameter(Segmentation.RGBD_SALIENCY, os.getcwd()+'/results/rgbd_saliency/')
@@ -19,11 +20,12 @@ class RgbdSaliencyTestSuite(unittest.TestCase):
         directory_depth = device.datasetPath + 'depth/'
 
         for i in range(0, 10):
-            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
+            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), DepthFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
             seg.process(frame)
             seg.print_results()
             seg.finish()
             break
+    """
 
     def test_write_result(self):
         device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
@@ -34,11 +36,11 @@ class RgbdSaliencyTestSuite(unittest.TestCase):
         directory_depth = device.datasetPath + 'depth/'
 
         for i in range(0, 10):
-            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
+            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), DepthFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
             seg.process(frame)
             seg.write_results()
             seg.finish()
-            break
+            #break
 
 
 if __name__ == '__main__':

@@ -19,6 +19,9 @@ class DepthFrame(object):
         self.directory = directory
         self.fileName = fileName
 
+    def getFilePath(self):
+        return self.directory + self.fileName
+
     def getImage(self):
         return cv2.imread(self.getFilePath(), cv2.IMREAD_GRAYSCALE)
 

@@ -14,7 +14,7 @@ with open('LICENSE') as f:
 setup(
     name='obeach',
     version='0.1.0',
-    description='A framework for RGBD Objec Segmentation',
+    description='A framework for RGBD Object Segmentation',
     long_description=readme,
     author='Luiz Eduardo Zis',
     author_email='zisluiz@gmail.com',

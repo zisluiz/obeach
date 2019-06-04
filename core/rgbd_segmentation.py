@@ -10,9 +10,6 @@ from lib.fcn_tensorflow import FcnTensorflow
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
 import ctypes
-# import sys
-# sys.path.append('/usr/local/lib/python2.7/dist-packages/cv2/python-2.7/')
-# sys.path.append('/usr/local/python/cv2/python-2.7')
 
 
 class RGBDSegmentation(object):
