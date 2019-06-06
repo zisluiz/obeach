@@ -83,6 +83,9 @@ RUN cd /usr/libs/caffe && mkdir build && cd build && cmake .. && make
 
 RUN pip3 install scikit-image imutils
 
+RUN cd /usr/libs/ && git clone https://github.com/Algomorph/pyboostcvconverter.git && cd pyboostcvconverter && \
+    mkdir build && cd build && cmake -DPYTHON_DESIRED_VERSION:STRING=3.X .. && make && make install
+
 WORKDIR /usr/app/
 
 #docker build -t obeach:latest -f obeachDockerfile .
