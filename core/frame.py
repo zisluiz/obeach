@@ -1,4 +1,6 @@
 import cv2
+from PIL import Image
+
 
 class RGBFrame(object):
 
@@ -10,7 +12,8 @@ class RGBFrame(object):
         return self.directory + self.fileName
 
     def getImage(self):
-        return cv2.imread(self.getFilePath(), cv2.IMREAD_COLOR)
+        return Image.open(self.getFilePath())
+        #return cv2.imread(self.getFilePath(), cv2.IMREAD_COLOR)
 
 
 class DepthFrame(object):
@@ -23,7 +26,8 @@ class DepthFrame(object):
         return self.directory + self.fileName
 
     def getImage(self):
-        return cv2.imread(self.getFilePath(), cv2.IMREAD_GRAYSCALE)
+        return Image.open(self.getFilePath()).convert('LA')
+        #return cv2.imread(self.getFilePath(), cv2.IMREAD_GRAYSCALE)
 
 
 class RGBDFrame(object):

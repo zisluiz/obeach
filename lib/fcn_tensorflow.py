@@ -1,10 +1,12 @@
 import tensorflow as tf
 import numpy as np
 import scipy.misc as misc
+from lib.algorithm_interface import AlgorithmInterface
 
-class FcnTensorflow(object):
+class FcnTensorflow(AlgorithmInterface):
     """The Foo class supports two methods, bar, and foobar..."""
     def __init__(self):
+        AlgorithmInterface.__init__(self)
         graph = tf.Graph()
         self.sess = tf.Session(graph=graph)
         tf.saved_model.loader.load(self.sess, ["serve"], '/opt/project/lib/fcn_tensorflow')
@@ -12,28 +14,31 @@ class FcnTensorflow(object):
         self.pred = graph.get_tensor_by_name("ExpandDims:0")
         self.resize_size = 224
 
-    def segment_image(self, rgb_file_path, depth_file_path, num_objects):
-        rgb_image = misc.imread(rgb_file_path, flatten=False, mode='RGB')
-        depth_image = misc.imread(depth_file_path, flatten=True, mode='P')
-        original_height = rgb_image.shape[0]
-        original_width = rgb_image.shape()[1]
-        rgb_resized_image = misc.imresize(rgb_image,
-                      [self.resize_size, self.resize_size], interp='nearest')
-        depth_resized_image = misc.imresize(depth_image,
-                      [self.resize_size, self.resize_size], interp='nearest')
+    def segment_image(self, rgb_image, depth_image, num_objects):
+        #rgb_image = misc.imread(rgb_file_path, flatten=False, mode='RGB')
+        #depth_image = misc.imread(depth_file_path, flatten=True, mode='P')
+        #original_height = rgb_image.shape[0]
+        #original_width = rgb_image.shape()[1]
+        #rgb_resized_image = misc.imresize(rgb_image,
+        #              [self.resize_size, self.resize_size], interp='nearest')
+        #depth_resized_image = misc.imresize(depth_image,
+        #              [self.resize_size, self.resize_size], interp='nearest')
 
         output = self.sess.run(self.pred,
-                          feed_dict={'input_image:0': rgb_resized_image.reshape(1, self.resize_size,self.resize_size,3),
-                                     'annotation:0': depth_resized_image.reshape(1, self.resize_size,self.resize_size,1), 'keep_probabilty:0': 1.0})
+                          feed_dict={'input_image:0': np.array(rgb_image).reshape(1, rgb_image.width, rgb_image.height, 3),
+                                     'annotation:0': np.array(depth_image).reshape(1, depth_image.width, depth_image.height, 1), 'keep_probabilty:0': 1.0})
         output = np.squeeze(output, axis=3)
 
-        rgb_resized_image = misc.imresize(output[0],
-                      [original_height, original_width], interp='nearest')
-        print(rgb_resized_image)
+        #rgb_resized_image = misc.imresize(output[0],
+        #              [original_height, original_width], interp='nearest')
+        #print(output)
+        objs = self.to_objects(output.reshape(rgb_image.width, rgb_image.height))
+        num_objects.value = str.encode('{0}'.format(len(objs)))
+        return objs
 
 
     def cleanup_objects(self, results, num_objects):
-        return self.librgbd_saliency.Facade_cleanupObjects(self.obj, results, num_objects)
+        return
 
 
     def _transform(filename, __channels):
@@ -50,5 +55,5 @@ class FcnTensorflow(object):
         else:
             resize_image = image
 
-        return resize_image.reshape(1, resize_size,resize_size,3 if __channels else 1)
+        return resize_image.reshape(1, resize_size, resize_size, 3 if __channels else 1)
 

@@ -1,14 +1,17 @@
 """foo.py - a simple demo of importing a calss from C++"""
 import ctypes
 from core.object import Object
+from lib.algorithm_interface import AlgorithmInterface
 
 # lib = ctypes.cdll.LoadLibrary('/media/zis/Dados/dev/Mestrado/codes/obeach/lib/libgraph-canny-segm.so')
 
 
 
-class GraphCannySegm(object):
+class GraphCannySegm(AlgorithmInterface):
     """The Foo class supports two methods, bar, and foobar..."""
     def __init__(self):
+        AlgorithmInterface.__init__(self)
+        self.python_segmentation = False
         self.libgraph_canny_segm = ctypes.cdll.LoadLibrary('/opt/project/lib/libgraph-canny-segm.so')
         self.libgraph_canny_segm.Facade_new.argtypes = [ctypes.c_char_p]
         self.libgraph_canny_segm.Facade_new.restype = ctypes.c_void_p

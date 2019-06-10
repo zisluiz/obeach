@@ -1,10 +1,14 @@
 """foo.py - a simple demo of importing a calss from C++"""
 import ctypes
 from core.object import Object
+from lib.algorithm_interface import AlgorithmInterface
 
-class RgbdSaliency(object):
+
+class RgbdSaliency(AlgorithmInterface):
     """The Foo class supports two methods, bar, and foobar..."""
     def __init__(self):
+        AlgorithmInterface.__init__(self)
+        self.python_segmentation = False
         self.librgbd_saliency = ctypes.cdll.LoadLibrary('/opt/project/lib/rgbd_saliency/librgbd_saliency.so')
         self.librgbd_saliency.Facade_new.argtypes = [ctypes.c_char_p]
         self.librgbd_saliency.Facade_new.restype = ctypes.c_void_p

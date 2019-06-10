@@ -7,6 +7,7 @@ from core.parameter import Segmentation
 from lib.graph_canny_segm import GraphCannySegm
 from lib.rgbd_saliency import RgbdSaliency
 from lib.fcn_tensorflow import FcnTensorflow
+from lib.fusenet_pytorch import Fusenet
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
 import ctypes
@@ -26,6 +27,8 @@ class RGBDSegmentation(object):
             self.algorithmSegmentation = RgbdSaliency()
         elif self.parameter.segmentation == Segmentation.FCN_TENSORFLOW:
             self.algorithmSegmentation = FcnTensorflow()
+        elif self.parameter.segmentation == Segmentation.FUSENET:
+            self.algorithmSegmentation = Fusenet()
         else:
             raise ValueError('Segmentation options not supported: '+self.parameter.segmentation.name+'.')
 
@@ -33,18 +36,22 @@ class RGBDSegmentation(object):
         time_elapsed = TimeElapsed()
         self.lastProcessedFrame = frame
         Logger.info('Processing frame - RGB: ' + frame.rgbFrame.getFilePath() + ', Depth: '+frame.depthFrame.getFilePath())
-        self.results = self.algorithmSegmentation.segment_image(frame.rgbFrame.getFilePath(),
-                        frame.depthFrame.getFilePath(), self.numObjects)
+        self.results = self.algorithmSegmentation.segment_image(self.get_image(frame.rgbFrame),
+                                                                self.get_image(frame.depthFrame), self.numObjects)
         Logger.info('Objects segmented: ' + str(self.get_num_objects()))
         time_elapsed.printTimeElapsed()
 
     def print_results(self):
         for i in range(self.get_num_objects()):
             obj = self.results[i]
-            Logger.info('Object id: ' + str(obj.id) + ', número de pontos: ' + str(obj.pointsLength))
-            for j in range(obj.pointsLength):
-                Logger.info('Ponto ' + str(j) + ' - x: ' + str(obj.points[j].x) + ' y: ' + str(obj.points[j].y) + ' z: ' + str(obj.points[j].z))
-
+            if self.algorithmSegmentation.python_segmentation:
+                Logger.info('Object id: ' + str(obj.id) + ', número de pontos: ' + str(len(obj.pointsList)))
+                for j in range(len(obj.pointsList)):
+                    Logger.info('Ponto ' + str(j) + ' - x: ' + str(obj.pointsList[j].x) + ' y: ' + str(obj.pointsList[j].y) + ' z: ' + str(obj.pointsList[j].z))
+            else:
+                Logger.info('Object id: ' + str(obj.id) + ', número de pontos: ' + str(obj.pointsLength))
+                for j in range(obj.pointsLength):
+                    Logger.info('Ponto ' + str(j) + ' - x: ' + str(obj.points[j].x) + ' y: ' + str(obj.points[j].y) + ' z: ' + str(obj.points[j].z))
     def show_results(self):
             img = self.write_objects()
             cv2.imshow('image', img)
@@ -70,15 +77,31 @@ class RGBDSegmentation(object):
             red = self.r()
             green = self.r()
             blue = self.r()
-            for j in range(obj.pointsLength):
-                point = obj.points[j]
-                img[point.y, point.x] = (red, green, blue)
+
+            if self.algorithmSegmentation.python_segmentation:
+                for j in range(len(obj.pointsList)):
+                    point = obj.pointsList[j]
+                    img[point.y, point.x] = (red, green, blue)
+            else:
+                for j in range(obj.pointsLength):
+                    point = obj.points[j]
+                    img[point.y, point.x] = (red, green, blue)
+
         return img
 
     def finish(self):
         Logger.info('Finishing segmentation')
-        self.algorithmSegmentation.cleanup_objects(self.results.contents, self.numObjects)
+        if self.algorithmSegmentation.python_segmentation:
+            self.algorithmSegmentation.cleanup_objects(self.results, self.numObjects)
+        else:
+            self.algorithmSegmentation.cleanup_objects(self.results.contents, self.numObjects)
 
     def get_num_objects(self):
         return int(self.numObjects.value)
+
+    def get_image(self, rgbFrame):
+        if self.parameter.transformations is not None:
+            return self.parameter.transformations(rgbFrame.getImage())
+        else:
+            return rgbFrame.getImage()
 
