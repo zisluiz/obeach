@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
-from lib.cpf_segmentation import CpfSegmentation
+from lib.alg_cpf_segmentation import CpfSegmentation
 from core.parameter import Segmentation
 import pcl.pcl_visualization
 

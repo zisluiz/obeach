@@ -4,19 +4,18 @@ import cv2
 import random
 import os
 from core.parameter import Segmentation
-from lib.graph_canny_segm import GraphCannySegm
-from lib.rgbd_saliency import RgbdSaliency
-from lib.fcn_tensorflow import FcnTensorflow
-from lib.fusenet_pytorch import Fusenet
+from lib.alg_graph_canny_segm import GraphCannySegm
+from lib.alg_rgbd_saliency import RgbdSaliency
+from lib.alg_fcn_tensorflow import FcnTensorflow
+from lib.alg_fusenet_pytorch import Fusenet
 from util.log import Logger
 from util.timeelapsed import TimeElapsed
-import ctypes
 
 
 class RGBDSegmentation(object):
     def __init__(self, parameter):
         self.parameter = parameter
-        self.numObjects = ctypes.create_string_buffer(3)
+        self.numObjects = 0
         self.algorithmSegmentation = None
         self.lastProcessedFrame = None
         self.results = None
@@ -94,10 +93,11 @@ class RGBDSegmentation(object):
         if self.algorithmSegmentation.python_segmentation:
             self.algorithmSegmentation.cleanup_objects(self.results, self.numObjects)
         else:
-            self.algorithmSegmentation.cleanup_objects(self.results.contents, self.numObjects)
+            self.algorithmSegmentation.cleanup_objects(self.results, self.numObjects)
 
     def get_num_objects(self):
-        return int(self.numObjects.value)
+        #return int(self.numObjects.strip())
+        return self.numObjects
 
     def get_image(self, rgbFrame):
         if self.parameter.transformations is not None:

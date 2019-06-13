@@ -12,7 +12,7 @@ class RGBFrame(object):
         return self.directory + self.fileName
 
     def getImage(self):
-        return Image.open(self.getFilePath())
+        return Image.open(self.getFilePath()).convert('RGB')
         #return cv2.imread(self.getFilePath(), cv2.IMREAD_COLOR)
 
 
@@ -26,7 +26,7 @@ class DepthFrame(object):
         return self.directory + self.fileName
 
     def getImage(self):
-        return Image.open(self.getFilePath()).convert('LA')
+        return Image.open(self.getFilePath()).convert('RGB')#.convert('L')
         #return cv2.imread(self.getFilePath(), cv2.IMREAD_GRAYSCALE)
 
 

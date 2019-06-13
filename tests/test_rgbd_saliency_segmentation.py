@@ -40,7 +40,7 @@ class RgbdSaliencyTestSuite(unittest.TestCase):
             seg.process(frame)
             seg.write_results()
             seg.finish()
-            #break
+            break
 
 
 if __name__ == '__main__':

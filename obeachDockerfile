@@ -30,7 +30,8 @@ RUN add-apt-repository universe && \
 
 RUN apt-get install -y libatlas-base-dev liblapack-dev libblas-dev
 
-RUN apt-get install -y libboost-all-dev
+#RUN apt-get install -y libboost-all-dev
+
 RUN apt-get install -y libprotobuf-dev protobuf-compiler libgoogle-glog-dev libgflags-dev libhdf5-dev
 RUN apt-get install -y liblmdb-dev libleveldb-dev libsnappy-dev
 
@@ -47,6 +48,17 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y install python-pip pytho
 RUN apt-get install -y libeigen3-dev libflann-dev libvtk7-dev
 
 RUN cd /usr/libs && \
+ wget --no-verbose https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
+ tar xzf boost_1_65_1.tar.gz && \
+ cd boost_1_65_1 && \
+ ln -s /usr/local/include/python3.6m /usr/local/include/python3.6 && \
+ ./bootstrap.sh --with-python=$(which python3) && \
+ ./b2 install && \
+ rm /usr/local/include/python3.6 && \
+ ldconfig && \
+ cd / && rm -rf /usr/libs/boost_1_65_1/
+
+RUN cd /usr/libs && \
     wget -O pcl-1.8.1.tar.gz https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz && \
     tar zxvf pcl-1.8.1.tar.gz
 
@@ -60,6 +72,11 @@ COPY requirements.txt /usr/libs/requirements.txt
 
 RUN pip3 install -r /usr/libs/requirements.txt
 
+RUN ln -s /usr/local/lib/libboost_python3.so /usr/local/lib/libboost_python-36.so
+
+RUN echo 'export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/python3.6m/"' >  ~/.bashrc_profile
+RUN /bin/bash -c "source ~/.bashrc_profile"
+
 #Tensorflow 1.13-gpu
 RUN pip3 install https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.13.1-cp36-cp36m-linux_x86_64.whl
 RUN pip3 install --user  tensorflow-gpu
@@ -67,7 +84,7 @@ RUN pip3 install scipy
 
 #Pytorch
 RUN pip3 install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl
-RUN pip3 install torchvision
+RUN pip3 install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl
 RUN pip3 install dominate visdom
 RUN mkdir -p /root/.cache/torch/checkpoints/
 RUN wget -O /root/.cache/torch/checkpoints/vgg16-397923af.pth https://download.pytorch.org/models/vgg16-397923af.pth
@@ -83,8 +100,8 @@ RUN cd /usr/libs/caffe && mkdir build && cd build && cmake .. && make
 
 RUN pip3 install scikit-image imutils
 
-RUN cd /usr/libs/ && git clone https://github.com/Algomorph/pyboostcvconverter.git && cd pyboostcvconverter && \
-    mkdir build && cd build && cmake -DPYTHON_DESIRED_VERSION:STRING=3.X .. && make && make install
+#RUN cd /usr/libs/ && git clone https://github.com/Algomorph/pyboostcvconverter.git && cd pyboostcvconverter && \
+#    mkdir build && cd build && cmake -DPYTHON_DESIRED_VERSION:STRING=3.X .. && make && make install
 
 WORKDIR /usr/app/
 
