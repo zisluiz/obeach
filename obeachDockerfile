@@ -1,6 +1,10 @@
 FROM nvidia/cuda:10.0-cudnn7-devel
 
 RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository universe && \
+    add-apt-repository main && \
+    apt-get update
 
 #OpenCV
 RUN apt-get -y install build-essential
@@ -22,11 +26,6 @@ RUN cd /usr/libs/opencv-3.4.6 && \
     make -j7 && \
     make install
 RUN cd /usr/libs && rm -R opencv-3.4.6 && rm -R opencv_contrib-3.4.6
-
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository universe && \
-    add-apt-repository main && \
-    apt-get update
 
 RUN apt-get install -y libatlas-base-dev liblapack-dev libblas-dev
 
@@ -103,8 +102,13 @@ RUN pip3 install scikit-image imutils
 #RUN cd /usr/libs/ && git clone https://github.com/Algomorph/pyboostcvconverter.git && cd pyboostcvconverter && \
 #    mkdir build && cd build && cmake -DPYTHON_DESIRED_VERSION:STRING=3.X .. && make && make install
 
+RUN /bin/bash -c "source ~/.bashrc_profile"
+
 WORKDIR /usr/app/
 
-#docker build -t obeach:latest -f obeachDockerfile .
+#docker build -t obeach:latest -f obeachDockerfile
 #docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/projects/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/projects/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/projects/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/projects/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/projects/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/projects/rgbd-saliency/:/usr/app/rgbd-saliency/ obeach bash
 #docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/code/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/code/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/code/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/code/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/code/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/code/rgbd-saliency/:/usr/app/rgbd-saliency/ obeach bash
+
+
+

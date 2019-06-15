@@ -5,18 +5,20 @@ from core.object import Point
 class AlgorithmInterface(object):
     def __init__(self):
         self.python_segmentation = True
+        self.depth_image_grayscale = True
+        self.depth_image_colored = False
 
     def to_objects(self, prediction):
         objects = []
         colors = []
 
-        for x in range(prediction.shape[0]):
-            for y in range(prediction.shape[1]):
-                if len(prediction.shape) == 3:
-                    b, g, r = prediction[x, y]
+        for h in range(prediction.shape[0]):
+            for w in range(prediction.shape[1]):
+                if len(prediction.shape) == 3 and prediction.shape[2] == 3:
+                    b, g, r = prediction[h, w]
                     key = (b, g, r)
                 else:
-                    v = prediction[x, y]
+                    v = prediction[h, w]
                     key = v
 
                 if key not in colors:
@@ -27,20 +29,20 @@ class AlgorithmInterface(object):
                     colors.append(key)
                     obj.id = len(objects)
 
-        for x in range(prediction.shape[0]):
-            for y in range(prediction.shape[1]):
-                if len(prediction.shape) == 3:
-                    b, g, r = prediction[x, y]
+        for h in range(prediction.shape[0]):
+            for w in range(prediction.shape[1]):
+                if len(prediction.shape) == 3 and prediction.shape[2] == 3:
+                    b, g, r = prediction[h, w]
                     key = (b, g, r)
                 else:
-                    v = prediction[x, y]
+                    v = prediction[h, w]
                     key = v
 
                 idx = colors.index(key)
                 point = Point()
                 objects[idx].pointsList.append(point)
-                point.x = x
-                point.y = y
+                point.x = w
+                point.y = h
                 point.z = 0
 
         return objects

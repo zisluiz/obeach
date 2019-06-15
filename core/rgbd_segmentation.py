@@ -3,7 +3,9 @@
 import cv2
 import random
 import os
+import numpy as np
 from core.parameter import Segmentation
+from core.frame import DepthFrame
 from lib.alg_graph_canny_segm import GraphCannySegm
 from lib.alg_rgbd_saliency import RgbdSaliency
 from lib.alg_fcn_tensorflow import FcnTensorflow
@@ -15,7 +17,6 @@ from util.timeelapsed import TimeElapsed
 class RGBDSegmentation(object):
     def __init__(self, parameter):
         self.parameter = parameter
-        self.numObjects = 0
         self.algorithmSegmentation = None
         self.lastProcessedFrame = None
         self.results = None
@@ -36,12 +37,12 @@ class RGBDSegmentation(object):
         self.lastProcessedFrame = frame
         Logger.info('Processing frame - RGB: ' + frame.rgbFrame.getFilePath() + ', Depth: '+frame.depthFrame.getFilePath())
         self.results = self.algorithmSegmentation.segment_image(self.get_image(frame.rgbFrame),
-                                                                self.get_image(frame.depthFrame), self.numObjects)
-        Logger.info('Objects segmented: ' + str(self.get_num_objects()))
+                                                                self.get_image(frame.depthFrame))
+        Logger.info('Objects segmented: ' + str(self.algorithmSegmentation.get_num_objects()))
         time_elapsed.printTimeElapsed()
 
     def print_results(self):
-        for i in range(self.get_num_objects()):
+        for i in range(self.algorithmSegmentation.get_num_objects()):
             obj = self.results[i]
             if self.algorithmSegmentation.python_segmentation:
                 Logger.info('Object id: ' + str(obj.id) + ', número de pontos: ' + str(len(obj.pointsList)))
@@ -69,9 +70,9 @@ class RGBDSegmentation(object):
         time_elapsed.printTimeElapsed()
 
     def write_objects(self):
-        img = cv2.imread(self.lastProcessedFrame.rgbFrame.getFilePath(), cv2.IMREAD_COLOR)
+        img = self.get_image(self.lastProcessedFrame.rgbFrame)
 
-        for i in range(int(self.get_num_objects())):
+        for i in range(int(self.algorithmSegmentation.get_num_objects())):
             obj = self.results[i]
             red = self.r()
             green = self.r()
@@ -91,17 +92,24 @@ class RGBDSegmentation(object):
     def finish(self):
         Logger.info('Finishing segmentation')
         if self.algorithmSegmentation.python_segmentation:
-            self.algorithmSegmentation.cleanup_objects(self.results, self.numObjects)
+            self.algorithmSegmentation.cleanup_objects(self.results)
         else:
-            self.algorithmSegmentation.cleanup_objects(self.results, self.numObjects)
-
-    def get_num_objects(self):
-        #return int(self.numObjects.strip())
-        return self.numObjects
+            self.algorithmSegmentation.cleanup_objects(self.results)
 
     def get_image(self, rgbFrame):
-        if self.parameter.transformations is not None:
-            return self.parameter.transformations(rgbFrame.getImage())
+        image = None
+
+        if isinstance(rgbFrame, DepthFrame):
+            if self.algorithmSegmentation.depth_image_colored:
+                image = rgbFrame.getImage(False, True)
+            elif not self.algorithmSegmentation.depth_image_grayscale:
+                image = rgbFrame.getImage(False)
+
+        if image is None:
+            image = rgbFrame.getImage()
+
+        if self.parameter.resize is not None:
+            return cv2.resize(image, self.parameter.resize)
         else:
-            return rgbFrame.getImage()
+            return image
 

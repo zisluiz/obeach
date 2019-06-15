@@ -13,10 +13,10 @@ class Segmentation(Enum):
 
 class Parameter(object):
 
-    def __init__(self, segmentation, output_dir, transformations=None, ops=20):
+    def __init__(self, segmentation, output_dir, resize=None, ops=20):
         self.segmentation = segmentation
         self.outputDir = output_dir
-        self.transformations = transformations
+        self.resize = resize
         self.ops = ops
 
         if not os.path.exists(self.outputDir):

@@ -106,5 +106,9 @@ venv.bak/
 # PyCharm
 .idea/
 
+caffe/*
 tests/results/*
 tests/logs/*
+lib/fusenet/checkpoints/nyuv2/*
+lib/fusenet/checkpoints/sunrgbd/*
+lib/fcn_tensorflow/*
