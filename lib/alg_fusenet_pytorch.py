@@ -47,9 +47,8 @@ class Fusenet(AlgorithmInterface):
         self.num_objects = len(objs)
         return objs
 
-
     def cleanup_objects(self, results):
-        return
+        results.clear()
 
     def predict_image(self, rgb, depth):
         input = {'rgb_image': rgb, 'depth_image': depth}
@@ -63,5 +62,6 @@ class Fusenet(AlgorithmInterface):
     def get_num_objects(self):
         return self.num_objects
 
-
+    def release(self):
+        return
 

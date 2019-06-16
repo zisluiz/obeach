@@ -6,12 +6,15 @@ from util.log import Logger
 class TimeElapsed(object):
 
     def __init__(self):
-        self.start()
+        self.startedTime = self.get_now()
 
     def start(self):
-        self.start = datetime.datetime.now()
+        self.startedTime = self.get_now()
 
-    def printTimeElapsed(self):
-        end = datetime.datetime.now()
-        elapsed = end - self.start
-        Logger.info('Time elapsed: ' + str(elapsed.seconds) + '.' + str(elapsed.microseconds) + ' seconds')
+    def get_now(self):
+        return datetime.datetime.now()
+
+    def printTimeElapsed(self, message=''):
+        end = self.get_now()
+        elapsed = end - self.startedTime
+        Logger.info(message + 'Time elapsed: ' + str(elapsed))

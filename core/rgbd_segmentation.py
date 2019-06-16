@@ -39,7 +39,7 @@ class RGBDSegmentation(object):
         self.results = self.algorithmSegmentation.segment_image(self.get_image(frame.rgbFrame),
                                                                 self.get_image(frame.depthFrame))
         Logger.info('Objects segmented: ' + str(self.algorithmSegmentation.get_num_objects()))
-        time_elapsed.printTimeElapsed()
+        time_elapsed.printTimeElapsed('Total segmentation - ')
 
     def print_results(self):
         for i in range(self.algorithmSegmentation.get_num_objects()):
@@ -67,7 +67,7 @@ class RGBDSegmentation(object):
             os.makedirs(self.parameter.outputDir)
 
         cv2.imwrite(self.parameter.outputDir+self.lastProcessedFrame.rgbFrame.fileName, img)
-        time_elapsed.printTimeElapsed()
+        time_elapsed.printTimeElapsed('Total writing file - ')
 
     def write_objects(self):
         img = self.get_image(self.lastProcessedFrame.rgbFrame)
@@ -109,7 +109,26 @@ class RGBDSegmentation(object):
             image = rgbFrame.getImage()
 
         if self.parameter.resize is not None:
+            image = self.fix_proportion(image)
             return cv2.resize(image, self.parameter.resize)
         else:
             return image
+
+    def fix_proportion(self, image):
+        if not self.parameter.fix_proportion:
+            return image
+
+        if image.shape[0] > image.shape[1]:
+            diff = image.shape[0] - image.shape[1]
+            crop_img = image[int(diff/2):int(image.shape[0]-(diff/2)), 0:image.shape[1]]
+            return crop_img
+        elif image.shape[0] < image.shape[1]:
+            diff = image.shape[1] - image.shape[0]
+            crop_img = image[0:image.shape[0], int(diff/2):int(image.shape[1]-(diff/2))]
+            return crop_img
+        else:
+            return image
+
+    def release(self):
+        self.algorithmSegmentation.release()
 

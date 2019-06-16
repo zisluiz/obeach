@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import unittest
 from core.parameter import *
 from core.fakedevice import *
@@ -13,33 +12,21 @@ class FcnTensorflowTestSuite(unittest.TestCase):
 
     def test_print_result(self):
         device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
-        parameter = Parameter(Segmentation.FCN_TENSORFLOW, os.getcwd()+'/results/fcn_tensorflow/')
+        parameter = Parameter(Segmentation.FCN_TENSORFLOW, os.getcwd()+'/results/fcn_tensorflow/', resize=(224, 224))
         seg = RGBDSegmentation(parameter)
         directory_rgb = device.datasetPath + 'rgb/'
         directory_depth = device.datasetPath + 'depth/'
 
-        for i in range(0, 10):
-            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
-            seg.process(frame)
-            seg.print_results()
-            seg.finish()
-            break
-"""
-    def test_write_result(self):
-        device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
-        # device = FakeDevice(SourceType.IMAGE, '/media/zis/Dados/dev/datasets/putkk.poznan/Dataset_1_Kin_2')
-        parameter = Parameter(Segmentation.RGBD_SALIENCY, os.getcwd()+'/results/rgbd_saliency/')
-        seg = RGBDSegmentation(parameter)
-        directory_rgb = device.datasetPath + 'rgb/'
-        directory_depth = device.datasetPath + 'depth/'
+        frame = RGBDFrame(RGBFrame(directory_rgb, 'inp_5.png'), DepthFrame(directory_depth, 'gt_5.png'))
+        seg.process(frame)
+        seg.write_results()
+        seg.finish()
 
-        for i in range(0, 10):
-            frame = RGBDFrame(RGBFrame(directory_rgb, 'rgb_'+format(i, '05')+'.png'), RGBFrame(directory_depth, 'depth_' + format(i, '05') + '.png'))
-            seg.process(frame)
-            seg.write_results()
-            seg.finish()
-            break
-"""
+        frame = RGBDFrame(RGBFrame(directory_rgb, 'inp_6.png'), DepthFrame(directory_depth, 'gt_6.png'))
+        seg.process(frame)
+        seg.write_results()
+        seg.finish()
+
 
 if __name__ == '__main__':
     Logger.init()

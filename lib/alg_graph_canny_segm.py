@@ -20,3 +20,7 @@ class GraphCannySegm(AlgorithmInterface):
 
     def get_num_objects(self):
         return self.obj.numObjects
+
+    def release(self):
+        return
+

@@ -13,23 +13,24 @@ class FusenetTestSuite(unittest.TestCase):
 
     def test_print_result(self):
         device = FakeDevice(SourceType.IMAGE, 'dataset/png/')
-        parameter = Parameter(Segmentation.FUSENET, os.getcwd()+'/results/fusenet/', resize=(224,224))
+        parameter = Parameter(Segmentation.FUSENET, os.getcwd()+'/results/fusenet/', resize=(224, 224))
         seg = RGBDSegmentation(parameter)
         directory_rgb = device.datasetPath + 'rgb/'
         directory_depth = device.datasetPath + 'depth/'
+
         frame = RGBDFrame(RGBFrame(directory_rgb, 'inp_5.png'), DepthFrame(directory_depth, 'gt_5.png'))
         seg.process(frame)
-        seg.print_results()
+        #seg.print_results()
         seg.finish()
 
         frame = RGBDFrame(RGBFrame(directory_rgb, 'inp_6.png'), DepthFrame(directory_depth, 'gt_6.png'))
         seg.process(frame)
-        seg.print_results()
+        #seg.print_results()
         seg.finish()
 
         frame = RGBDFrame(RGBFrame(directory_rgb, '8.png'), DepthFrame(directory_depth, '8.png'))
         seg.process(frame)
-        seg.print_results()
+        #seg.print_results()
         seg.finish()
 
     def test_write_result(self):
