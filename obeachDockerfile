@@ -29,6 +29,7 @@ RUN cd /usr/libs && rm -R opencv-3.4.6 && rm -R opencv_contrib-3.4.6
 
 RUN apt-get install -y libatlas-base-dev liblapack-dev libblas-dev
 
+RUN apt-get update
 #RUN apt-get install -y libboost-all-dev
 
 RUN apt-get install -y libprotobuf-dev protobuf-compiler libgoogle-glog-dev libgflags-dev libhdf5-dev
@@ -46,24 +47,24 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y install python-pip pytho
 
 RUN apt-get install -y libeigen3-dev libflann-dev libvtk7-dev
 
-#RUN cd /usr/libs && \
-# wget --no-verbose https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
-# tar xzf boost_1_65_1.tar.gz && \
-# cd boost_1_65_1 && \
-# ln -s /usr/local/include/python3.6m /usr/local/include/python3.6 && \
-# ./bootstrap.sh --with-python=$(which python3) && \
-# ./b2 install && \
-# rm /usr/local/include/python3.6 && \
-# ldconfig && \
-# cd / && rm -rf /usr/libs/boost_1_65_1/
+RUN cd /usr/libs && \
+ wget --no-verbose https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
+ tar xzf boost_1_65_1.tar.gz && \
+ cd boost_1_65_1 && \
+ ln -s /usr/local/include/python3.6m /usr/local/include/python3.6 && \
+ ./bootstrap.sh --with-python=$(which python3) && \
+ ./b2 install && \
+ rm /usr/local/include/python3.6 && \
+ ldconfig && \
+ cd / && rm -rf /usr/libs/boost_1_65_1/
 
-#RUN cd /usr/libs && \
-#    wget -O pcl-1.8.1.tar.gz https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz && \
-#    tar zxvf pcl-1.8.1.tar.gz
+RUN cd /usr/libs && \
+    wget -O pcl-1.8.1.tar.gz https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz && \
+    tar zxvf pcl-1.8.1.tar.gz
 
-#RUN cd /usr/libs/pcl-pcl-1.8.1 && mkdir build && cd build && cmake .. && make -j2 && make -j2 install
-#RUN rm -R /usr/libs/pcl-pcl-1.8.1
-#RUN rm -R /usr/libs/cmake-3.13.4 && rm /usr/libs/opencv-3.4.6.zip && rm /usr/libs/opencv-contrib-3.4.6.zip && rm /usr/libs/pcl-1.8.1.tar.gz && rm /usr/libs/cmake-3.13.4.tar.gz
+RUN cd /usr/libs/pcl-pcl-1.8.1 && mkdir build && cd build && cmake .. && make -j2 && make -j2 install
+RUN rm -R /usr/libs/pcl-pcl-1.8.1
+RUN rm -R /usr/libs/cmake-3.13.4 && rm /usr/libs/opencv-3.4.6.zip && rm /usr/libs/opencv-contrib-3.4.6.zip && rm /usr/libs/pcl-1.8.1.tar.gz && rm /usr/libs/cmake-3.13.4.tar.gz
 
 RUN apt-get -y install python3-pip
 
@@ -103,18 +104,24 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 
 RUN pip3 install scipy==1.2.0 imutils tensorboardX imageio matplotlib scikit-image
 
-#RUN cd /usr/libs/ && git clone https://github.com/Algomorph/pyboostcvconverter.git && cd pyboostcvconverter && \
-#    mkdir build && cd build && cmake -DPYTHON_DESIRED_VERSION:STRING=3.X .. && make && make install
+RUN cd /usr/libs/ && git clone https://github.com/Algomorph/pyboostcvconverter.git && cd pyboostcvconverter && \
+    mkdir build && cd build && cmake -DPYTHON_DESIRED_VERSION:STRING=3.X .. && make && make install
 
 RUN pip3 install psutil nvidia-ml-py3
 
 RUN /bin/bash -c "source ~/.bashrc_profile"
 
+RUN apt-get -y install gdb
+
+RUN mkdir /usr/app
+
+COPY MATLAB/ /usr/app/MATLAB/
+
 WORKDIR /usr/app/
 
 #docker build -t obeach:latest -f obeachDockerfile .
 #docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/projects/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/projects/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/projects/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/projects/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/projects/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/projects/rgbd-saliency/:/usr/app/rgbd-saliency/ obeach bash
-#docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/code/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/code/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/code/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/code/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/code/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/code/DepthAwareCNN/:/usr/app/DepthAwareCNN/ -v /home/zis/dev/code/RedNet/:/usr/app/RedNet/ -v /home/zis/dev/datasets/:/usr/app/datasets/ obeach bash
+#docker run -it --privileged --runtime=nvidia --net=host --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY --device /dev/dri -v="$HOME/.Xauthority:/root/.Xauthority:rw" -v /home/zis/dev/code/graph-canny-segm/:/usr/app/graph-canny-segm/ -v /home/zis/dev/code/cpf_segmentation/:/usr/app/cpf_segmentation/ -v /home/zis/dev/code/4D_Segmentation/:/usr/app/4D_Segmentation/ -v /home/zis/dev/code/FCN.tensorflow/:/usr/app/FCN.tensorflow/ -v /home/zis/dev/code/fusenet-pytorch/:/usr/app/fusenet-pytorch/ -v /home/zis/dev/code/DepthAwareCNN/:/usr/app/DepthAwareCNN/ -v /home/zis/dev/code/RedNet/:/usr/app/RedNet/ -v /home/zis/dev/datasets/:/usr/app/datasets/ -v /home/zis/dev/code/obeach/:/usr/app/obeach/ obeach bash
 
 
 

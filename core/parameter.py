@@ -13,12 +13,13 @@ class Segmentation(Enum):
 
 class Parameter(object):
 
-    def __init__(self, segmentation, output_dir, resize=None, fix_proportion=True, ops=20):
+    def __init__(self, segmentation, output_dir=None, resize=None, scale=None, fix_proportion=True, ops=20):
         self.segmentation = segmentation
         self.outputDir = output_dir
         self.resize = resize
+        self.scale = scale
         self.fix_proportion = fix_proportion
         self.ops = ops
 
-        if not os.path.exists(self.outputDir):
+        if self.outputDir and not os.path.exists(self.outputDir):
             os.makedirs(self.outputDir)

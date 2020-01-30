@@ -1,4 +1,4 @@
-import tensorflow as tf
+#import tensorflow as tf
 import numpy as np
 from lib.algorithm_interface import AlgorithmInterface
 
@@ -6,6 +6,7 @@ from lib.algorithm_interface import AlgorithmInterface
 class FcnTensorflow(AlgorithmInterface):
     """The Foo class supports two methods, bar, and foobar..."""
     def __init__(self):
+        """
         AlgorithmInterface.__init__(self)
         graph = tf.Graph()
         self.sess = tf.Session(graph=graph)
@@ -13,7 +14,7 @@ class FcnTensorflow(AlgorithmInterface):
         #graph = tf.get_default_graph()
         self.pred = graph.get_tensor_by_name("ExpandDims:0")
         self.num_objects = 0
-
+        """
     def segment_image(self, rgb_image, depth_image):
         output = self.sess.run(self.pred,
                           feed_dict={'input_image:0': rgb_image.reshape(1, rgb_image.shape[0], rgb_image.shape[1], 3)

@@ -9,7 +9,7 @@ class GraphCannySegm(AlgorithmInterface):
         AlgorithmInterface.__init__(self)
         self.python_segmentation = False
         self.depth_image_grayscale = False
-        self.obj = libgraph_canny_segm.Facade_new('../config/config.graph-canny.properties')
+        self.obj = libgraph_canny_segm.Facade_new('config/config.graph-canny.properties')
 
     def segment_image(self, rgb_image, depth_image):
         return libgraph_canny_segm.Facade_segmentImage(self.obj, rgb_image, depth_image)
