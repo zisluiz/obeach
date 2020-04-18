@@ -20,8 +20,6 @@ class RGBDSegmentation(object):
         self.algorithmSegmentation = None
         self.lastProcessedFrame = None
         self.results = None
-        self.processedRgbImage = None
-        self.processedDepthImage = None
         self.r = lambda: random.randint(0, 255)
         if self.parameter.segmentation == Segmentation.GRAPH_CANNY:
             self.algorithmSegmentation = GraphCannySegm()
@@ -38,9 +36,8 @@ class RGBDSegmentation(object):
         time_elapsed = TimeElapsed()
         self.lastProcessedFrame = frame
         Logger.info('Processing frame - RGB: ' + frame.rgbFrame.getFilePath() + ', Depth: '+frame.depthFrame.getFilePath())
-        self.processedRgbImage = self.get_image(frame.rgbFrame)
-        self.processedDepthImage = self.get_image(frame.depthFrame)
-        self.results = self.algorithmSegmentation.segment_image(self.processedRgbImage, self.processedDepthImage)
+        self.results = self.algorithmSegmentation.segment_image(self.get_image(frame.rgbFrame),
+                                                                self.get_image(frame.depthFrame))
         Logger.info('Objects segmented: ' + str(self.algorithmSegmentation.get_num_objects()))
         time_elapsed.printTimeElapsed('Total segmentation - ')
 
@@ -72,14 +69,6 @@ class RGBDSegmentation(object):
         cv2.imwrite(self.parameter.outputDir+self.lastProcessedFrame.rgbFrame.fileName, img)
         time_elapsed.printTimeElapsed('Total writing file - ')
 
-    def write_labels_to_file(self, fileName, colored):
-        time_elapsed = TimeElapsed()
-        img = self.write_objects_to_label(colored)
-        Logger.info('Saving result to ' + fileName)
-
-        cv2.imwrite(fileName, img)
-        time_elapsed.printTimeElapsed('Total writing file - ')
-
     def write_objects(self):
         img = self.get_image(self.lastProcessedFrame.rgbFrame)
 
@@ -100,26 +89,6 @@ class RGBDSegmentation(object):
 
         return img
 
-    def write_objects_to_label(self, colored):
-        h, w, c = self.processedRgbImage.shape
-        img = np.zeros( (h, w, 3) if colored else (h, w), np.uint8)
-
-        for i in range(int(self.algorithmSegmentation.get_num_objects())):
-            obj = self.results[i]
-
-            color = (self.r(), self.r(), self.r()) if colored else i
-
-            if self.algorithmSegmentation.python_segmentation:
-                for j in range(len(obj.pointsList)):
-                    point = obj.pointsList[j]
-                    img[point.y, point.x] = color
-            else:
-                for j in range(obj.pointsLength):
-                    point = obj.points[j]
-                    img[point.y, point.x] = color
-
-        return img
-
     def finish(self):
         Logger.info('Finishing segmentation')
         if self.algorithmSegmentation.python_segmentation:
@@ -129,10 +98,8 @@ class RGBDSegmentation(object):
 
     def get_image(self, rgbFrame):
         image = None
-        imagePath = rgbFrame.directory
-        isdepth = isinstance(rgbFrame, DepthFrame)
 
-        if isdepth:
+        if isinstance(rgbFrame, DepthFrame):
             if self.algorithmSegmentation.depth_image_colored:
                 image = rgbFrame.getImage(False, True)
             elif not self.algorithmSegmentation.depth_image_grayscale:
@@ -141,16 +108,9 @@ class RGBDSegmentation(object):
         if image is None:
             image = rgbFrame.getImage()
 
-        if "active_vision" in imagePath or "putkk" in imagePath:
-            image = image[0:1080, 419:1499]
-
         if self.parameter.resize is not None:
             image = self.fix_proportion(image)
             return cv2.resize(image, self.parameter.resize)
-        elif self.parameter.scale is not None:
-            image = cv2.resize(image, (int(image.shape[1] / self.parameter.scale), int(image.shape[0] / self.parameter.scale)))
-            #cv2.imwrite('results/scale/' + ('d_' if isdepth else 'r_') + rgbFrame.fileName, image)
-            return image
         else:
             return image
 

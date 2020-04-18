@@ -1,7 +1,7 @@
 """foo.py - a simple demo of importing a calss from C++"""
 from lib.algorithm_interface import AlgorithmInterface
 import numpy as np
-#from lib.rgbd_saliency import librgbd_saliency
+from lib.rgbd_saliency import librgbd_saliency
 
 
 class RgbdSaliency(AlgorithmInterface):

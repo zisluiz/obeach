@@ -3,7 +3,7 @@ from lib.fusenet.data import CreateDataLoader
 from lib.fusenet.models import create_model
 import cv2
 import os
-#import torch
+import torch
 import numpy as np
 from torchvision import transforms
 from lib.algorithm_interface import AlgorithmInterface
@@ -12,7 +12,6 @@ from lib.algorithm_interface import AlgorithmInterface
 class Fusenet(AlgorithmInterface):
     """The Foo class supports two methods, bar, and foobar..."""
     def __init__(self):
-        """
         AlgorithmInterface.__init__(self)
         opt = TestOptions()
         opt.initialize()
@@ -36,7 +35,7 @@ class Fusenet(AlgorithmInterface):
         self.model.load_networks(opt.epoch)
         self.model.eval()
         self.num_objects = 0
-        """
+
 
     def segment_image(self, rgb_image, depth_image):
         test_transforms = transforms.Compose([transforms.ToTensor()])
