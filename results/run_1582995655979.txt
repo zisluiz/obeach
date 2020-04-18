@@ -1,0 +1,9 @@
+=== Start time: 2020-02-29 17:00:55.978927
+GPU Usage Percent: 7
+GPU Mem Usage (MB)): 712.441856
+Process CPU Percent: 0.0 --- CPU Percent: 100.0
+Process CPU Percent: 0.0 --- CPU Percent: 100.0
+Process CPU Percent: 0.0 --- CPU Percent: 100.0
+Process CPU Percent: 0.0 --- CPU Percent: 100.0
+Process memory usage: 264.155136
+Memory information: {'rss': 263405568, 'vms': 2652000256, 'shared': 148946944, 'text': 3883008, 'lib': 0, 'data': 252133376, 'dirty': 0, 'uss': 264155136, 'pss': 264155136, 'swap': 0}

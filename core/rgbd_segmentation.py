@@ -34,15 +34,45 @@ class RGBDSegmentation(object):
         else:
             raise ValueError('Segmentation options not supported: '+self.parameter.segmentation.name+'.')
 
-    def process(self, frame):
+    def process(self, frame, dataset):
         time_elapsed = TimeElapsed()
         self.lastProcessedFrame = frame
         Logger.info('Processing frame - RGB: ' + frame.rgbFrame.getFilePath() + ', Depth: '+frame.depthFrame.getFilePath())
         self.processedRgbImage = self.get_image(frame.rgbFrame)
         self.processedDepthImage = self.get_image(frame.depthFrame)
+        self.changeProperties(frame.rgbFrame, dataset)
+        self.algorithmSegmentation = GraphCannySegm()
         self.results = self.algorithmSegmentation.segment_image(self.processedRgbImage, self.processedDepthImage)
         Logger.info('Objects segmented: ' + str(self.algorithmSegmentation.get_num_objects()))
         time_elapsed.printTimeElapsed('Total segmentation - ')
+
+    def changeProperties(self, rgbFrame, datasetName):
+        newContent = ""
+        with open('config/config.graph-canny.ori.properties', 'r') as file:
+            for line in file:
+                useDefault = True
+
+                if "write_image_seg" in line:
+                    useDefault = False
+                    newContent += "write_image_seg=\"results/" + datasetName + '/seg_' + rgbFrame.fileName.replace("jpg","png") + "\"\n"
+                if "fx=" in line and "semantics" in datasetName:
+                    useDefault = False
+                    newContent += "fx=759.680" + "\n"
+                if "fy=" in line and "semantics" in datasetName:
+                    useDefault = False
+                    newContent += "fy=759.680" + "\n"
+                if "cx=" in line and "semantics" in datasetName:
+                    useDefault = False
+                    newContent += "cx=540.0" + "\n"
+                if "cy=" in line and "semantics" in datasetName:
+                    useDefault = False
+                    newContent += "cy=540.0" + "\n"
+
+                if useDefault:
+                    newContent += line
+
+        with open("config/config.graph-canny.properties", "w+") as summary:
+            summary.write(newContent)
 
     def print_results(self):
         for i in range(self.algorithmSegmentation.get_num_objects()):
@@ -142,13 +172,15 @@ class RGBDSegmentation(object):
             image = rgbFrame.getImage()
 
         if "active_vision" in imagePath or "putkk" in imagePath:
-            image = image[0:1080, 419:1499]
+            image = image[0:1080, 240:1680]
+        #elif "semantics3d_raw" in imagePath:
+        #    image = image[0:1024, 128:1152]
 
         if self.parameter.resize is not None:
             image = self.fix_proportion(image)
-            return cv2.resize(image, self.parameter.resize)
+            return cv2.resize(image, self.parameter.resize, interpolation=cv2.INTER_NEAREST)
         elif self.parameter.scale is not None:
-            image = cv2.resize(image, (int(image.shape[1] / self.parameter.scale), int(image.shape[0] / self.parameter.scale)))
+            image = cv2.resize(image, (int(image.shape[1] / self.parameter.scale), int(image.shape[0] / self.parameter.scale)), interpolation=cv2.INTER_NEAREST)
             #cv2.imwrite('results/scale/' + ('d_' if isdepth else 'r_') + rgbFrame.fileName, image)
             return image
         else:

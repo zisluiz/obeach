@@ -49,7 +49,7 @@ for imagePath in files:
     depthImageName = os.path.basename(imagePath).replace('jpg', 'png')
 
     frame = RGBDFrame(RGBFrame(parentDatasetDir+'/rgb/', os.path.basename(imagePath)), DepthFrame(parentDatasetDir+'/depth/', depthImageName))
-    seg.process(frame)
+    seg.process(frame, datasetName)
     res = nvidia_smi.nvmlDeviceGetUtilizationRates(handle)
     mem_res = nvidia_smi.nvmlDeviceGetMemoryInfo(handle)
     curGpuTime = res.gpu
@@ -97,7 +97,7 @@ for imagePath in files:
     depthImageName = os.path.basename(imagePath).replace('jpg', 'png')
 
     frame = RGBDFrame(RGBFrame(parentDatasetDir+'/rgb/', os.path.basename(imagePath)), DepthFrame(parentDatasetDir+'/depth/', depthImageName))
-    seg.process(frame)
+    seg.process(frame, datasetName)
     seg.finish()
 end = time.time()
 
